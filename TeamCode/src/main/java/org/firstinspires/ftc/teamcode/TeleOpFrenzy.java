@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 public class TeleOpFrenzy extends CommandOpMode {
 
     private Motor frontLeft, backLeft, frontRight, backRight;
-    private MotorGroup leftDrive, rightDrive;
+    private MotorGroupTemp leftDrive, rightDrive;
 
     private GamepadEx driver;
     private RevIMU imu;
@@ -29,8 +29,8 @@ public class TeleOpFrenzy extends CommandOpMode {
         frontRight = new Motor(hardwareMap, "fR");
         backRight = new Motor(hardwareMap, "bR");
 
-        leftDrive = new MotorGroup(frontLeft, backLeft);
-        rightDrive = new MotorGroup(frontRight, backRight);
+        leftDrive = new MotorGroupTemp(frontLeft, backLeft);
+        rightDrive = new MotorGroupTemp(frontRight, backRight);
 
         driver = new GamepadEx(gamepad1);
         imu = new RevIMU(hardwareMap);

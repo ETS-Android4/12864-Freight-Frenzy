@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 public class AutonomousFrenzy extends CommandOpMode {
 
     private Motor frontLeft, backLeft, frontRight, backRight;
-    private MotorGroup leftDrive, rightDrive;
+    private MotorGroupTemp leftDrive, rightDrive;
 
     private RevIMU imu;
 
@@ -35,9 +35,10 @@ public class AutonomousFrenzy extends CommandOpMode {
         frontRight = new Motor(hardwareMap, "fR");
         backRight = new Motor(hardwareMap, "bR");
 
-        leftDrive = new MotorGroup(frontLeft, backLeft);
-        rightDrive = new MotorGroup(frontRight, backRight);
-
+        leftDrive = new MotorGroupTemp(frontLeft, backLeft);
+        rightDrive = new MotorGroupTemp(frontRight, backRight);
+        rightDrive.setInverted(true);
+        
         imu = new RevIMU(hardwareMap);
         imu.init();
         driveKinematics = new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH);

@@ -10,19 +10,23 @@ import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveOdome
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveWheelSpeeds;
 
 import org.firstinspires.ftc.teamcode.DriveConstants;
+import org.firstinspires.ftc.teamcode.MotorGroupTemp;
 
 public class DriveSubsystem extends SubsystemBase {
 
-    private MotorGroup leftDrive, rightDrive;
+    private MotorGroupTemp leftDrive, rightDrive;
+    private Motor.Encoder leftEncoders, rightEncoders;
     private DifferentialDrive differentialArcade;
     private DifferentialDriveOdometry driveOdometry;
     private RevIMU imu;
 
-    public DriveSubsystem(MotorGroup left, MotorGroup right, RevIMU revIMU) {
+    public DriveSubsystem(MotorGroupTemp left, MotorGroupTemp right, RevIMU revIMU) {
         leftDrive = left;
         rightDrive = right;
-        leftDrive.encoder.setDistancePerPulse(DriveConstants.DISTANCE_PER_PULSE);
-        rightDrive.encoder.setDistancePerPulse(DriveConstants.DISTANCE_PER_PULSE);
+        leftEncoders = leftDrive.encoder;
+        rightEncoders = rightDrive.encoder;
+        leftEncoders.setDistancePerPulse(DriveConstants.DISTANCE_PER_PULSE);
+        rightEncoders.setDistancePerPulse(DriveConstants.DISTANCE_PER_PULSE);
 
         imu = revIMU;
 
@@ -32,8 +36,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void resetEncoders() {
-        leftDrive.encoder.reset();
-        rightDrive.encoder.reset();
+        leftEncoders.reset();
+        rightEncoders.reset();
     }
 
     public Pose2d getPose() {
@@ -41,7 +45,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(leftDrive.encoder.getDistance(), rightDrive.encoder.getDistance());
+        return new DifferentialDriveWheelSpeeds(leftDrive.getPositions().get(0), rightDrive.getPositions().get(0));
     }
 
     public void driveAuton(double leftSpeed, double rightSpeed){
@@ -55,7 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        driveOdometry.update(imu.getRotation2d(), leftDrive.encoder.getDistance(),
-                rightDrive.encoder.getDistance());
+        driveOdometry.update(imu.getRotation2d(), leftEncoders.getDistance(),
+                rightEncoders.getDistance());
     }
 }
