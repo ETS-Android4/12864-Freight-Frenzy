@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.RamseteCommand;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.RamseteController;
@@ -38,7 +39,7 @@ public class AutonomousFrenzy extends CommandOpMode {
         leftDrive = new MotorGroupTemp(frontLeft, backLeft);
         rightDrive = new MotorGroupTemp(frontRight, backRight);
         rightDrive.setInverted(true);
-        
+
         imu = new RevIMU(hardwareMap);
         imu.init();
         driveKinematics = new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH);
@@ -52,7 +53,14 @@ public class AutonomousFrenzy extends CommandOpMode {
                 new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD),
                 driveSubsystem::driveAuton);
 
-        schedule(ramseteCommand.andThen(new InstantCommand(() -> driveSubsystem.driveAuton(0, 0))));
+        schedule(new ParallelCommandGroup(
+                ramseteCommand.andThen(new InstantCommand(() -> driveSubsystem.driveAuton(0, 0))),
+                new InstantCommand(() -> {
+                    telemetry.addData("test", TestTrajectory.generateTrajectory().getTotalTimeSeconds());
+                    telemetry.update();
+                }
+                )
+        ));
     }
 
 }

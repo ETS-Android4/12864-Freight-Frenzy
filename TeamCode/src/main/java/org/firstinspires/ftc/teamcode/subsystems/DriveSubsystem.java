@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.MotorGroupTemp;
 public class DriveSubsystem extends SubsystemBase {
 
     private MotorGroupTemp leftDrive, rightDrive;
-    private Motor.Encoder leftEncoders, rightEncoders;
     private DifferentialDrive differentialArcade;
     private DifferentialDriveOdometry driveOdometry;
     private RevIMU imu;
@@ -23,10 +22,8 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem(MotorGroupTemp left, MotorGroupTemp right, RevIMU revIMU) {
         leftDrive = left;
         rightDrive = right;
-        leftEncoders = leftDrive.encoder;
-        rightEncoders = rightDrive.encoder;
-        leftEncoders.setDistancePerPulse(DriveConstants.DISTANCE_PER_PULSE);
-        rightEncoders.setDistancePerPulse(DriveConstants.DISTANCE_PER_PULSE);
+        leftDrive.setDistancePerPulse(DriveConstants.DISTANCE_PER_PULSE);
+        rightDrive.setDistancePerPulse(DriveConstants.DISTANCE_PER_PULSE);
 
         imu = revIMU;
 
@@ -36,8 +33,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void resetEncoders() {
-        leftEncoders.reset();
-        rightEncoders.reset();
+        leftDrive.resetEncoder();
+        rightDrive.resetEncoder();
     }
 
     public Pose2d getPose() {
@@ -45,7 +42,9 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(leftDrive.getPositions().get(0), rightDrive.getPositions().get(0));
+        return new DifferentialDriveWheelSpeeds
+                (leftDrive.getVelocity()*DriveConstants.DISTANCE_PER_PULSE,
+                        rightDrive.getVelocity()*DriveConstants.DISTANCE_PER_PULSE);
     }
 
     public void driveAuton(double leftSpeed, double rightSpeed){
@@ -59,7 +58,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        driveOdometry.update(imu.getRotation2d(), leftEncoders.getDistance(),
-                rightEncoders.getDistance());
+        driveOdometry.update(imu.getRotation2d(), leftDrive.getPositions().get(0),
+                rightDrive.getPositions().get(0));
     }
 }
