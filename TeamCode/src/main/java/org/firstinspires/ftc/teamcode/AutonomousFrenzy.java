@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.RamseteCommand;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.RamseteController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
@@ -54,12 +55,14 @@ public class AutonomousFrenzy extends CommandOpMode {
                 driveSubsystem::driveAuton);
 
         schedule(new ParallelCommandGroup(
-                ramseteCommand.andThen(new InstantCommand(() -> driveSubsystem.driveAuton(0, 0))),
-                new InstantCommand(() -> {
+                ramseteCommand,
+                new RunCommand(() -> {
                     telemetry.addData("test", TestTrajectory.generateTrajectory().getTotalTimeSeconds());
+                    telemetry.addData("CurPos", driveSubsystem.getPose());
+                    telemetry.addData("Left Encoders", leftDrive.getPositions());
+                    telemetry.addData("Right Encoders", rightDrive.getPositions());
                     telemetry.update();
-                }
-                )
+                })
         ));
     }
 
