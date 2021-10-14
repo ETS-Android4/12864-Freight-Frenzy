@@ -32,10 +32,10 @@ public class AutonomousFrenzy extends CommandOpMode {
 
     @Override
     public void initialize() {
-        frontLeft = new Motor(hardwareMap, "fL");
-        backLeft = new Motor(hardwareMap, "bL");
-        frontRight = new Motor(hardwareMap, "fR");
-        backRight = new Motor(hardwareMap, "bR");
+        frontLeft = new Motor(hardwareMap, "fL", Motor.GoBILDA.RPM_435);
+        backLeft = new Motor(hardwareMap, "bL", Motor.GoBILDA.RPM_435);
+        frontRight = new Motor(hardwareMap, "fR", Motor.GoBILDA.RPM_435);
+        backRight = new Motor(hardwareMap, "bR", Motor.GoBILDA.RPM_435);
 
         leftDrive = new MotorGroupTemp(frontLeft, backLeft);
         rightDrive = new MotorGroupTemp(frontRight, backRight);
@@ -57,7 +57,6 @@ public class AutonomousFrenzy extends CommandOpMode {
         schedule(new ParallelCommandGroup(
                 ramseteCommand,
                 new RunCommand(() -> {
-                    telemetry.addData("test", TestTrajectory.generateTrajectory().getTotalTimeSeconds());
                     telemetry.addData("CurPos", driveSubsystem.getPose());
                     telemetry.addData("Left Encoders", leftDrive.getPositions());
                     telemetry.addData("Right Encoders", rightDrive.getPositions());

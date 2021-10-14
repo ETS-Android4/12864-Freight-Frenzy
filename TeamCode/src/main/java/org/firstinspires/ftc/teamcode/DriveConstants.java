@@ -7,8 +7,8 @@ public class DriveConstants {
 
     //TODO: Just tune all of this it all needs to be changed
     public static double TRACK_WIDTH = 0.38227;
-    public static double WHEEL_DIAMETER = 0.0350;
-    public static double TICKS_PER_REV = 8192;
+    public static double WHEEL_DIAMETER = 0.1;
+    public static double TICKS_PER_REV = 383.6;
     public static double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
 
     // Values for ramsete controller
