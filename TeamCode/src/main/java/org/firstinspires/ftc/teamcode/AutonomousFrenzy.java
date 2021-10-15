@@ -15,6 +15,8 @@ import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveKinematics;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
@@ -41,6 +43,17 @@ public class AutonomousFrenzy extends CommandOpMode {
         rightDrive = new MotorGroupTemp(frontRight, backRight);
         rightDrive.setInverted(true);
 
+        frontLeft.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        backRight.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+
+        frontLeft.motor.setMode(RunMode.RUN_USING_ENCODER);
+        backLeft.motor.setMode(RunMode.RUN_USING_ENCODER);
+        frontRight.motor.setMode(RunMode.RUN_USING_ENCODER);
+        backRight.motor.setMode(RunMode.RUN_USING_ENCODER);
+
+
         imu = new RevIMU(hardwareMap);
         imu.init();
         driveKinematics = new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH);
@@ -60,6 +73,8 @@ public class AutonomousFrenzy extends CommandOpMode {
                     telemetry.addData("CurPos", driveSubsystem.getPose());
                     telemetry.addData("Left Encoders", leftDrive.getPositions());
                     telemetry.addData("Right Encoders", rightDrive.getPositions());
+                    telemetry.addData("Left Speeds", leftDrive.getSpeeds());
+                    telemetry.addData("Right Speeds", rightDrive.getSpeeds());
                     telemetry.update();
                 })
         ));

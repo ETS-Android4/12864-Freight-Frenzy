@@ -13,7 +13,7 @@ public class DriveConstants {
 
     // Values for ramsete controller
     public static double B = 1.0;
-    public static double ZETA = 0.0;
+    public static double ZETA = 0.5;
 
     // Feedforward values for drive
     public static double kV = 1.0;
