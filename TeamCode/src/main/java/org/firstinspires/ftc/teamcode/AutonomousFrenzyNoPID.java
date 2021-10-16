@@ -43,10 +43,10 @@ public class AutonomousFrenzyNoPID extends CommandOpMode {
         frontRight.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
         backRight.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
 
-        frontLeft.motor.setMode(RunMode.RUN_USING_ENCODER);
-        backLeft.motor.setMode(RunMode.RUN_USING_ENCODER);
-        frontRight.motor.setMode(RunMode.RUN_USING_ENCODER);
-        backRight.motor.setMode(RunMode.RUN_USING_ENCODER);
+        frontLeft.motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
+        backRight.motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
 
 
         imu = new RevIMU(hardwareMap);

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.vision;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.vision.CapstonePipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -13,13 +14,23 @@ public class CapstoneDetector {
     private String cameraName;
     private CapstonePipeline capstonePipeline;
     private HardwareMap hardwareMap;
+    private int width, height;
 
-    public CapstoneDetector(HardwareMap hMap, String camName){
+    public CapstoneDetector(HardwareMap hMap, String camName) {
         hardwareMap = hMap;
         cameraName = camName;
+        width = 320;
+        height = 240;
     }
 
-    public void init(){
+    public CapstoneDetector(HardwareMap hMap, String camName, int width, int height) {
+        hardwareMap = hMap;
+        cameraName = camName;
+        this.width = width;
+        this.height = height;
+    }
+
+    public void init() {
         int cameraViewId = hardwareMap.appContext.getResources()
                 .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance()
@@ -31,12 +42,28 @@ public class CapstoneDetector {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);
             }
         });
     }
 
+    //Todo: tune these values they are just estimations for now
+    public Placement getPlacement() {
+        if (capstonePipeline.centroid.x > width - 100)
+            return Placement.RIGHT;
+        else if (capstonePipeline.centroid.x < width - 200)
+            return Placement.LEFT;
+        else
+            return Placement.CENTER;
+    }
+
     public OpenCvCamera getCamera() {
         return camera;
+    }
+
+    public enum Placement {
+        LEFT,
+        RIGHT,
+        CENTER
     }
 }
