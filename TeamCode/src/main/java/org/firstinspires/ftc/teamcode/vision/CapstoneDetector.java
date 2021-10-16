@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.vision.CapstonePipeline;
@@ -43,6 +44,11 @@ public class CapstoneDetector {
             @Override
             public void onOpened() {
                 camera.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                RobotLog.addGlobalWarningMessage("Dang the camera isn't working lol Error:" + errorCode);
             }
         });
     }
