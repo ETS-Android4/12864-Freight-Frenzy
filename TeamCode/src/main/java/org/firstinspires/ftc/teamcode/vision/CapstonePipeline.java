@@ -21,10 +21,10 @@ public class CapstonePipeline extends OpenCvPipeline {
     public Scalar low = new Scalar(31, 152, 95);
     public Scalar high = new Scalar(162, 255, 128);
 
-    Mat mask;
-    Mat frame;
-    Mat output;
-    Point centroid;
+    private Mat mask;
+    private Mat frame;
+    private Mat output;
+    private Point centroid;
 
     @Override
     public Mat processFrame(Mat input) {
@@ -63,5 +63,9 @@ public class CapstonePipeline extends OpenCvPipeline {
         }
 
         return frame;
+    }
+
+    public Point getCentroid(){
+        return centroid;
     }
 }

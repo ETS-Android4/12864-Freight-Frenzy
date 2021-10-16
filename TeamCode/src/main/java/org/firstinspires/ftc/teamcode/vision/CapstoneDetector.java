@@ -55,9 +55,9 @@ public class CapstoneDetector {
 
     //Todo: tune these values they are just estimations for now
     public Placement getPlacement() {
-        if (capstonePipeline.centroid.x > width - 100)
+        if (capstonePipeline.getCentroid().x > width - 100)
             return Placement.RIGHT;
-        else if (capstonePipeline.centroid.x < width - 200)
+        else if (capstonePipeline.getCentroid().x < width - 200)
             return Placement.LEFT;
         else
             return Placement.CENTER;
