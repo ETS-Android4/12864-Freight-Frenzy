@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.vision.CapstonePipeline;
+import org.opencv.core.Scalar;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -48,23 +49,33 @@ public class CapstoneDetector {
 
             @Override
             public void onError(int errorCode) {
-                RobotLog.addGlobalWarningMessage("Dang the camera isn't working lol Error:" + errorCode);
+                RobotLog.addGlobalWarningMessage("Warning: Camera device failed to open with EasyOpenCv error: " +
+                        ((errorCode == -1) ? "CAMERA_OPEN_ERROR_FAILURE_TO_OPEN_CAMERA_DEVICE" : "CAMERA_OPEN_ERROR_POSTMORTEM_OPMODE"));
             }
         });
     }
 
-    //Todo: tune these values they are just estimations for now
-    public Placement getPlacement() {
-        if (capstonePipeline.getCentroid().x > width - 100)
-            return Placement.RIGHT;
-        else if (capstonePipeline.getCentroid().x < width - 200)
-            return Placement.LEFT;
-        else
-            return Placement.CENTER;
-    }
-
     public OpenCvCamera getCamera() {
         return camera;
+    }
+
+    public void setLowerBound(Scalar low) {
+        capstonePipeline.setLowerBound(low);
+    }
+
+    public void setUpperBound(Scalar high) {
+        capstonePipeline.setUpperBound(high);
+    }
+
+    //Todo: tune these values they are just estimations for now
+    public Placement getPlacement() {
+        if (capstonePipeline.getCentroid() != null) {
+            if (capstonePipeline.getCentroid().x > width - (width / 3.2))
+                return Placement.RIGHT;
+            else if (capstonePipeline.getCentroid().x < width - (width / 1.6))
+                return Placement.LEFT;
+        }
+        return Placement.CENTER;
     }
 
     public enum Placement {
@@ -72,4 +83,5 @@ public class CapstoneDetector {
         RIGHT,
         CENTER
     }
+
 }

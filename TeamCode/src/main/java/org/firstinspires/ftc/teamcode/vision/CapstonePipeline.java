@@ -18,8 +18,8 @@ import java.util.List;
 public class CapstonePipeline extends OpenCvPipeline {
 
     //Todo: tune pls :)
-    public Scalar low = new Scalar(31, 152, 95);
-    public Scalar high = new Scalar(162, 255, 128);
+    private Scalar low = new Scalar(31, 152, 95);
+    private Scalar high = new Scalar(162, 255, 128);
 
     private Mat mask;
     private Mat frame;
@@ -65,7 +65,16 @@ public class CapstonePipeline extends OpenCvPipeline {
         return frame;
     }
 
-    public Point getCentroid(){
+    public Point getCentroid() {
         return centroid;
     }
+
+    public void setLowerBound(Scalar low) {
+        this.low = low;
+    }
+
+    public void setUpperBound(Scalar high) {
+        this.high = high;
+    }
+
 }
