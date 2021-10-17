@@ -73,8 +73,6 @@ public class Contours {
         centroid.x = moments.get_m10() / moments.get_m00();
         centroid.y = moments.get_m01() / moments.get_m00();
 
-        Rect rect = new Rect((int) centroid.x, (int) centroid.y, 10, 10);
-
         return centroid;
     }
 
@@ -97,6 +95,14 @@ public class Contours {
 
     public void setContourThickness(int thickness) {
         contourThickness = thickness;
+    }
+
+    public Mat getMask() {
+        return mask;
+    }
+
+    public Mat getOutput() {
+        return output;
     }
 
 }
