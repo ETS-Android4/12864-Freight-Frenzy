@@ -29,7 +29,7 @@ public class Contours {
         mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC1);
     }
 
-    public Contours(Scalar min, Scalar max, Mat frame, Mat output, Mat mask){
+    public Contours(Scalar min, Scalar max, Mat frame, Mat output, Mat mask) {
         this.min = min;
         this.max = max;
 
@@ -56,7 +56,7 @@ public class Contours {
         return frame;
     }
 
-    public List<MatOfPoint> contourList(){
+    public List<MatOfPoint> contourList() {
         return contours;
     }
 

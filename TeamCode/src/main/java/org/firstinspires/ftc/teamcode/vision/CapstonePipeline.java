@@ -18,20 +18,34 @@ import java.util.List;
 public class CapstonePipeline extends OpenCvPipeline {
 
     //Todo: tune pls :)
-    private Scalar low = new Scalar(31, 152, 95);
-    private Scalar high = new Scalar(162, 255, 128);
+    private Scalar low;
+    private Scalar high;
 
     private Mat mask;
     private Mat frame;
     private Mat output;
     private Point centroid;
 
-    @Override
-    public Mat processFrame(Mat input) {
+    public CapstonePipeline() {
+        low = new Scalar(31, 152, 95);
+        high = new Scalar(162, 255, 128);
+
         frame = new Mat();
         output = new Mat();
         mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC1);
+    }
 
+    public CapstonePipeline(Scalar lowerBound, Scalar upperBound) {
+        low = lowerBound;
+        high = upperBound;
+
+        frame = new Mat();
+        output = new Mat();
+        mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC1);
+    }
+
+    @Override
+    public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, output, Imgproc.COLOR_RGB2YCrCb);
         Core.inRange(output, low, high, mask);
         Core.bitwise_and(input, input, frame, mask);

@@ -19,9 +19,9 @@ public class VisionTesting extends CommandOpMode {
 
         FtcDashboard.getInstance().startCameraStream(capstoneDetector.getCamera(), 30);
 
-        schedule(new RunCommand(() -> {
+        schedule(new WaitCommand(500).andThen(new RunCommand(() -> {
             telemetry.addData("Capstone Placement", capstoneDetector.getPlacement());
             telemetry.update();
-        }));
+        })));
     }
 }
