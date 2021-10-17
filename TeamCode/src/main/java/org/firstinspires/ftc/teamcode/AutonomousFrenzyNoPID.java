@@ -67,6 +67,7 @@ public class AutonomousFrenzyNoPID extends CommandOpMode {
                     telemetry.addData("Right Encoders", rightDrive.getPositions());
                     telemetry.addData("Left Speeds", leftDrive.getSpeeds());
                     telemetry.addData("Right Speeds", rightDrive.getSpeeds());
+                    telemetry.addData("Wheel Speeds", driveSubsystem.getWheelSpeeds());
                     telemetry.update();
                 })
         ));
