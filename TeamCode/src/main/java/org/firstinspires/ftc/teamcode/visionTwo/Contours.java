@@ -4,9 +4,12 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,9 @@ public class Contours {
     private Mat output;
     private Mat hierarchy;
     private List<MatOfPoint> contours;
+
+    private Scalar contourColor = new Scalar(0, 55, 0);
+    private int contourThickness = 2;
 
     public Contours(Scalar min, Scalar max) {
         this.min = min;
@@ -51,13 +57,46 @@ public class Contours {
 
         if (hierarchy.size().height > 0 && hierarchy.size().width > 0) {
             for (int index = 0; index >= 0; index = (int) hierarchy.get(0, index)[0])
-                Imgproc.drawContours(frame, contours, index, new Scalar(88, 0, 0), 2);
+                Imgproc.drawContours(frame, contours, index, contourColor, contourThickness);
         }
         return frame;
     }
 
-    public List<MatOfPoint> contourList() {
+    public List<MatOfPoint> getContourList() {
         return contours;
+    }
+
+    public Point drawCentroid(Mat array) {
+        Moments moments = Imgproc.moments(array);
+        Point centroid = new Point();
+
+        centroid.x = moments.get_m10() / moments.get_m00();
+        centroid.y = moments.get_m01() / moments.get_m00();
+
+        Rect rect = new Rect((int) centroid.x, (int) centroid.y, 10, 10);
+
+        return centroid;
+    }
+
+    public void setLowerBound(Scalar low) {
+        min = low;
+    }
+
+    public void setUpperBound(Scalar high) {
+        max = high;
+    }
+
+    public void setLowerAndUpperBounds(Scalar low, Scalar high) {
+        min = low;
+        max = high;
+    }
+
+    public void setContourColor(Scalar color) {
+        contourColor = color;
+    }
+
+    public void setContourThickness(int thickness) {
+        contourThickness = thickness;
     }
 
 }

@@ -67,6 +67,10 @@ public class CapstoneDetector {
         capstonePipeline.setUpperBound(high);
     }
 
+    public void setLowerAndUpperBounds(Scalar low, Scalar high) {
+        capstonePipeline.setLowerAndUpperBounds(low, high);
+    }
+
     //Todo: tune these values they are just estimations for now
     public Placement getPlacement() {
         if (capstonePipeline.getCentroid() != null) {

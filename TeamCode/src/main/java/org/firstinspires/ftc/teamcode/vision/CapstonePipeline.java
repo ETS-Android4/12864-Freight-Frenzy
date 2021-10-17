@@ -17,7 +17,7 @@ import java.util.List;
 
 public class CapstonePipeline extends OpenCvPipeline {
 
-    //Todo: tune pls :)
+    // Declare the scalars and mats we will be using
     private Scalar low;
     private Scalar high;
 
@@ -26,6 +26,7 @@ public class CapstonePipeline extends OpenCvPipeline {
     private Mat output;
     private Point centroid;
 
+    // Initializes all values declared above to defaults
     public CapstonePipeline() {
         low = new Scalar(31, 152, 95);
         high = new Scalar(162, 255, 128);
@@ -35,6 +36,7 @@ public class CapstonePipeline extends OpenCvPipeline {
         mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC1);
     }
 
+    // Initializes all mats and allows for user to set their own color bounds
     public CapstonePipeline(Scalar lowerBound, Scalar upperBound) {
         low = lowerBound;
         high = upperBound;
@@ -46,16 +48,23 @@ public class CapstonePipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        // Converts the colorspace from RGB to YCrCb
         Imgproc.cvtColor(input, output, Imgproc.COLOR_RGB2YCrCb);
+        // Creates a mask of all pixels within the specified color bounds
         Core.inRange(output, low, high, mask);
+        // Puts the mask over the original image
         Core.bitwise_and(input, input, frame, mask);
 
+        // Blurs the image to smooth it out and reduce unwanted pixels
         Imgproc.GaussianBlur(mask, mask, new Size(7, 7), 0.0);
+
+        // Initialize the Mat and ArrayList and finds the contours on the image
         List<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat();
-
         Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 
+        // Draws contours onto the frame from the list created above. During this it searches for
+        // the biggest contour and saves it to the variable biggest.
         if (hierarchy.size().height > 0 && hierarchy.size().width > 0) {
             MatOfPoint biggest = new MatOfPoint();
             for (int index = 0; index >= 0; index = (int) hierarchy.get(0, index)[0]) {
@@ -65,6 +74,7 @@ public class CapstonePipeline extends OpenCvPipeline {
                 }
             }
 
+            // Creates a point and sets itt to the approximate center of the largest contour
             Moments moments = Imgproc.moments(biggest);
             centroid = new Point();
 
@@ -79,15 +89,22 @@ public class CapstonePipeline extends OpenCvPipeline {
         return frame;
     }
 
+    // Returns the center of the largest contour
     public Point getCentroid() {
         return centroid;
     }
 
+    // Allows the user to set lower and upper bounds after the file has been initialized
     public void setLowerBound(Scalar low) {
         this.low = low;
     }
 
     public void setUpperBound(Scalar high) {
+        this.high = high;
+    }
+
+    public void setLowerAndUpperBounds(Scalar low, Scalar high) {
+        this.low = low;
         this.high = high;
     }
 
