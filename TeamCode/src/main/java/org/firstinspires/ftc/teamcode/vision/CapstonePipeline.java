@@ -26,28 +26,24 @@ public class CapstonePipeline extends OpenCvPipeline {
     private Mat output;
     private Point centroid;
 
-    // Initializes all values declared above to defaults
+    // Initializes color bounds declared above to defaults
     public CapstonePipeline() {
         low = new Scalar(31, 152, 95);
         high = new Scalar(162, 255, 128);
-
-        frame = new Mat();
-        output = new Mat();
-        mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC1);
     }
 
-    // Initializes all mats and allows for user to set their own color bounds
+    // Allows for user to set their own color bounds
     public CapstonePipeline(Scalar lowerBound, Scalar upperBound) {
         low = lowerBound;
         high = upperBound;
-
-        frame = new Mat();
-        output = new Mat();
-        mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC1);
     }
 
     @Override
     public Mat processFrame(Mat input) {
+        frame = new Mat();
+        output = new Mat();
+        mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC1);
+
         // Converts the colorspace from RGB to YCrCb
         Imgproc.cvtColor(input, output, Imgproc.COLOR_RGB2YCrCb);
         // Creates a mask of all pixels within the specified color bounds
@@ -69,9 +65,10 @@ public class CapstonePipeline extends OpenCvPipeline {
             MatOfPoint biggest = new MatOfPoint();
             for (int index = 0; index >= 0; index = (int) hierarchy.get(0, index)[0]) {
                 Imgproc.drawContours(frame, contours, index, new Scalar(88, 0, 0), 2);
-                if (index > 0 && (contours.get(index).size().area() > contours.get(index - 1).size().area())) {
+                if (index == 0)
                     biggest = contours.get(index);
-                }
+                else if (contours.get(index).size().area() > contours.get(index - 1).size().area())
+                    biggest = contours.get(index);
             }
 
             // Creates a point and sets itt to the approximate center of the largest contour
