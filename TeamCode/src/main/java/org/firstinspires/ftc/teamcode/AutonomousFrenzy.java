@@ -70,11 +70,16 @@ public class AutonomousFrenzy extends CommandOpMode {
         schedule(new ParallelCommandGroup(
                 ramseteCommand,
                 new RunCommand(() -> {
-                    telemetry.addData("CurPos", driveSubsystem.getPose());
-                    telemetry.addData("Left Encoders", leftDrive.getPositions());
-                    telemetry.addData("Right Encoders", rightDrive.getPositions());
+//                    telemetry.addData("CurPos", driveSubsystem.getPose());
+//                    telemetry.addData("Left Encoders", leftDrive.getPositions());
+//                    telemetry.addData("Right Encoders", rightDrive.getPositions());
                     telemetry.addData("Left Speeds", leftDrive.getSpeeds());
                     telemetry.addData("Right Speeds", rightDrive.getSpeeds());
+                    telemetry.addData("Wheel Speeds", driveSubsystem.getWheelSpeeds());
+                    telemetry.addData("fl", frontLeft.getCorrectedVelocity());
+                    telemetry.addData("fr", frontRight.getCorrectedVelocity());
+                    telemetry.addData("bl", backLeft.getCorrectedVelocity());
+                    telemetry.addData("br", backRight.getCorrectedVelocity());
                     telemetry.update();
                 })
         ));
