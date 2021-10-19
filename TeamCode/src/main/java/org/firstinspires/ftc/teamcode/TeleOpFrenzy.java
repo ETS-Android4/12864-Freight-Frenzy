@@ -36,7 +36,7 @@ public class TeleOpFrenzy extends CommandOpMode {
         imu = new RevIMU(hardwareMap);
         imu.init();
 
-        driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu);
+        driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu, telemetry);
         driveCommand = new DriveCommand(driveSubsystem, driver::getLeftY, driver::getRightX);
 
         register(driveSubsystem);

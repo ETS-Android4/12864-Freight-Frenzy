@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 public class MotorGroupTemp extends Motor implements Iterable<Motor> {
 
     private final Motor[] group;
-    private boolean isInverted;
 
     /**
      * Create a new MotorGroup with the provided Motors.
@@ -36,7 +35,7 @@ public class MotorGroupTemp extends Motor implements Iterable<Motor> {
      */
     @Override
     public void set(double speed) {
-        group[0].set(isInverted ? -speed : speed);
+        group[0].set(speed);
         for (int i = 1; i < group.length; i++) {
             group[i].set(group[0].get());
         }
@@ -162,7 +161,7 @@ public class MotorGroupTemp extends Motor implements Iterable<Motor> {
      */
     @Override
     public boolean getInverted() {
-        return isInverted;
+        return group[0].getInverted();
     }
 
     /**
@@ -173,7 +172,7 @@ public class MotorGroupTemp extends Motor implements Iterable<Motor> {
      */
     @Override
     public void setInverted(boolean isInverted) {
-        this.isInverted = isInverted;
+        group[0].setInverted(isInverted);
     }
 
     /**

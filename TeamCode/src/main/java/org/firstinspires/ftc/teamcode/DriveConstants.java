@@ -12,8 +12,8 @@ public class DriveConstants {
     public static double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
 
     // Values for ramsete controller
-    public static double B = 1.0;
-    public static double ZETA = 0.5;
+    public static double B = 2.0;
+    public static double ZETA = 0.7;
 
     // Feedforward values for drive
     public static double kV = 1.0;

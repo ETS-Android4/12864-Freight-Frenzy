@@ -58,7 +58,7 @@ public class AutonomousFrenzy extends CommandOpMode {
         imu.init();
         driveKinematics = new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH);
 
-        driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu);
+        driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu, telemetry);
         ramseteCommand = new RamseteCommand(TestTrajectory.generateTrajectory(), driveSubsystem::getPose,
                 new RamseteController(DriveConstants.B, DriveConstants.ZETA),
                 new SimpleMotorFeedforward(DriveConstants.kS, DriveConstants.kV, DriveConstants.kA),
@@ -73,9 +73,6 @@ public class AutonomousFrenzy extends CommandOpMode {
 //                    telemetry.addData("CurPos", driveSubsystem.getPose());
 //                    telemetry.addData("Left Encoders", leftDrive.getPositions());
 //                    telemetry.addData("Right Encoders", rightDrive.getPositions());
-                    telemetry.addData("Left Speeds", leftDrive.getSpeeds());
-                    telemetry.addData("Right Speeds", rightDrive.getSpeeds());
-                    telemetry.addData("Wheel Speeds", driveSubsystem.getWheelSpeeds());
                     telemetry.addData("fl", frontLeft.getCorrectedVelocity());
                     telemetry.addData("fr", frontRight.getCorrectedVelocity());
                     telemetry.addData("bl", backLeft.getCorrectedVelocity());
