@@ -49,7 +49,6 @@ public class DriveSubsystem extends SubsystemBase {
         DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds
                 (leftDrive.getVelocity() * DriveConstants.DISTANCE_PER_PULSE,
                         rightDrive.getVelocity() * DriveConstants.DISTANCE_PER_PULSE);
-        wheelSpeeds.normalize(1.5);
         return wheelSpeeds;
     }
 

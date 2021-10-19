@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+import org.firstinspires.ftc.teamcode.commands.RamseteCommandRe;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
 @Autonomous(name = "robot")
@@ -30,7 +31,7 @@ public class AutonomousFrenzy extends CommandOpMode {
 
     private DifferentialDriveKinematics driveKinematics;
     private DriveSubsystem driveSubsystem;
-    private RamseteCommand ramseteCommand;
+    private RamseteCommandRe ramseteCommand;
 
     @Override
     public void initialize() {
@@ -59,13 +60,14 @@ public class AutonomousFrenzy extends CommandOpMode {
         driveKinematics = new DifferentialDriveKinematics(DriveConstants.TRACK_WIDTH);
 
         driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu, telemetry);
-        ramseteCommand = new RamseteCommand(TestTrajectory.generateTrajectory(), driveSubsystem::getPose,
+        driveSubsystem.getWheelSpeeds().normalize(1.5);
+        ramseteCommand = new RamseteCommandRe(TestTrajectory.generateTrajectory(), driveSubsystem::getPose,
                 new RamseteController(DriveConstants.B, DriveConstants.ZETA),
                 new SimpleMotorFeedforward(DriveConstants.kS, DriveConstants.kV, DriveConstants.kA),
                 driveKinematics, driveSubsystem::getWheelSpeeds,
                 new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD),
                 new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD),
-                driveSubsystem::driveAuton);
+                driveSubsystem::driveAuton, telemetry);
 
         schedule(new ParallelCommandGroup(
                 ramseteCommand,
@@ -73,10 +75,6 @@ public class AutonomousFrenzy extends CommandOpMode {
 //                    telemetry.addData("CurPos", driveSubsystem.getPose());
 //                    telemetry.addData("Left Encoders", leftDrive.getPositions());
 //                    telemetry.addData("Right Encoders", rightDrive.getPositions());
-                    telemetry.addData("fl", frontLeft.getCorrectedVelocity());
-                    telemetry.addData("fr", frontRight.getCorrectedVelocity());
-                    telemetry.addData("bl", backLeft.getCorrectedVelocity());
-                    telemetry.addData("br", backRight.getCorrectedVelocity());
                     telemetry.update();
                 })
         ));
