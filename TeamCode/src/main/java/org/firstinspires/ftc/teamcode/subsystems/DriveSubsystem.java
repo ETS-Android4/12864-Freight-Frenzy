@@ -47,17 +47,23 @@ public class DriveSubsystem extends SubsystemBase {
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds
-                (leftDrive.getVelocity()*DriveConstants.DISTANCE_PER_PULSE,
-                        rightDrive.getVelocity()*DriveConstants.DISTANCE_PER_PULSE);
+                (leftDrive.getVelocity() * DriveConstants.DISTANCE_PER_PULSE,
+                        rightDrive.getVelocity() * DriveConstants.DISTANCE_PER_PULSE);
         wheelSpeeds.normalize(1.5);
         return wheelSpeeds;
     }
 
-    public void driveAuton(double leftSpeed, double rightSpeed){
-        this.leftSpeed = leftSpeed;
-        this.rightSpeed = rightSpeed;
-        leftDrive.set(leftSpeed);
-        rightDrive.set(rightSpeed);
+    public void driveAuton(double leftSpeed, double rightSpeed) {
+        Motor leftLead = leftDrive.iterator().next();
+        Motor rightLead = rightDrive.iterator().next();
+        double leftPow = (leftSpeed / DriveConstants.DISTANCE_PER_PULSE) /
+                leftLead.ACHIEVABLE_MAX_TICKS_PER_SECOND;
+        double rightPow = (rightSpeed / DriveConstants.DISTANCE_PER_PULSE) /
+                rightLead.ACHIEVABLE_MAX_TICKS_PER_SECOND;
+        this.leftSpeed = leftPow;
+        this.rightSpeed = rightPow;
+        leftDrive.set(leftPow);
+        rightDrive.set(rightPow);
     }
 
     public void drive(double forwardSpeed, double turnSpeed) {
@@ -71,5 +77,6 @@ public class DriveSubsystem extends SubsystemBase {
         telemetry.addData("Wheel Speeds", this.getWheelSpeeds());
         telemetry.addData("leftSpeed", leftSpeed);
         telemetry.addData("rightSpeed", rightSpeed);
+        telemetry.addData("Pose", this.getPose());
     }
 }
