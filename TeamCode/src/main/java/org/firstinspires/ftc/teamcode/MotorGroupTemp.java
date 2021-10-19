@@ -172,7 +172,8 @@ public class MotorGroupTemp extends Motor implements Iterable<Motor> {
      */
     @Override
     public void setInverted(boolean isInverted) {
-        group[0].setInverted(isInverted);
+        for (Motor motor : group)
+            motor.setInverted(isInverted);
     }
 
     /**

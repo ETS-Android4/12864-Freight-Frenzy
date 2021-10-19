@@ -68,7 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void periodic() {
         driveOdometry.update(imu.getRotation2d(), leftDrive.getPositions().get(0),
                 rightDrive.getPositions().get(0));
-        telemetry.addData("Wheel Speeds", this::getWheelSpeeds);
+        telemetry.addData("Wheel Speeds", this.getWheelSpeeds());
         telemetry.addData("leftSpeed", leftSpeed);
         telemetry.addData("rightSpeed", rightSpeed);
     }
