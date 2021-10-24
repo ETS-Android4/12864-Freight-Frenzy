@@ -40,9 +40,10 @@ public class CapstonePipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+
         frame = new Mat();
         output = new Mat();
-        mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC1);
+        mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC4);
 
         // Converts the colorspace from RGB to YCrCb
         Imgproc.cvtColor(input, output, Imgproc.COLOR_RGB2YCrCb);
@@ -52,7 +53,7 @@ public class CapstonePipeline extends OpenCvPipeline {
         Core.bitwise_and(input, input, frame, mask);
 
         // Blurs the image to smooth it out and reduce unwanted pixels
-        Imgproc.GaussianBlur(mask, mask, new Size(7, 7), 0.0);
+        Imgproc.GaussianBlur(mask, mask, new Size(11, 15), 0.0);
 
         // Initialize the Mat and ArrayList and finds the contours on the image
         List<MatOfPoint> contours = new ArrayList<>();

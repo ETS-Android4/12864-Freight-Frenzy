@@ -21,7 +21,7 @@ public class CapstoneDetector {
     public CapstoneDetector(HardwareMap hMap, String camName) {
         hardwareMap = hMap;
         cameraName = camName;
-        width = 320;
+        width = 432;
         height = 240;
     }
 

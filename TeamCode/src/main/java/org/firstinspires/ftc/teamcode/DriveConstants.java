@@ -11,6 +11,10 @@ public class DriveConstants {
     public static double TICKS_PER_REV = 383.6;
     public static double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
 
+    // In Meters per Second
+    public static double MAX_VEL = 1.5;
+    public static double MAX_ACCEL = 1.5;
+
     // Values for ramsete controller
     public static double B = 2.0;
     public static double ZETA = 0.7;
