@@ -10,6 +10,8 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Pose2d;
@@ -58,6 +60,7 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
 
     private TrapezoidProfile motionProfile;
     private Mode mode;
+    private PIDController leftController, rightController;
 
     private static TrapezoidProfile genMotionProfile(boolean movingForward) {
         TrapezoidProfile.State setPoint = new TrapezoidProfile.State((movingForward ? 0 : DISTANCE), 0);
@@ -87,6 +90,9 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
         lastKi = kI;
         lastKd = kD;
 
+        leftController = new PIDController(kP, kI, kD);
+        rightController = new PIDController(kP, kI, kD);
+
         clock = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -109,12 +115,9 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
         xButton = new GamepadButton(gamepad, GamepadKeys.Button.X)
                 .whenPressed(() -> {
                     mode = Mode.DRIVER_MODE;
-//                    drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 });
         aButton = new GamepadButton(gamepad, GamepadKeys.Button.A)
                 .whenPressed(() -> {
-//                    drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
                     mode = Mode.TUNING_MODE;
                     movingForwards = true;
                     motionProfile = genMotionProfile(true);
@@ -135,9 +138,13 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
 
                     TrapezoidProfile.State motionState = motionProfile.calculate(profileTime);
                     double targetPower = kV * motionState.velocity;
-                    driveSubsystem.driveAuton(targetPower, targetPower);
-
                     DifferentialDriveWheelSpeeds velocities = driveSubsystem.getWheelSpeeds();
+
+
+                    driveSubsystem.driveAuton(
+                            leftController.calculate(velocities.leftMetersPerSecond, targetPower),
+                            rightController.calculate(velocities.rightMetersPerSecond, targetPower)
+                    );
 
                     // update telemetry
                     telemetry.addData("targetVelocity", motionState.velocity);
@@ -159,6 +166,8 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
 
             if (lastKp != kP || lastKd != kD
                     || lastKi != kI) {
+                leftController = new PIDController(kP, kI, kD);
+                rightController = new PIDController(kP, kI, kD);
 
                 lastKp = kP;
                 lastKi = kI;
