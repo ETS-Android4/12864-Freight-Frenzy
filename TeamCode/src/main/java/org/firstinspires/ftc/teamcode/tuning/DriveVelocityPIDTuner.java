@@ -11,31 +11,27 @@ import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveWheelSpeeds;
-import com.arcrobotics.ftclib.trajectory.Trajectory;
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile;
-import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.DriveConstants;
 import org.firstinspires.ftc.teamcode.MotorGroupTemp;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
-import java.util.List;
-import java.util.Map;
-
-import static org.firstinspires.ftc.teamcode.DriveConstants.*;
+import static org.firstinspires.ftc.teamcode.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.DriveConstants.kD;
+import static org.firstinspires.ftc.teamcode.DriveConstants.kI;
+import static org.firstinspires.ftc.teamcode.DriveConstants.kP;
+import static org.firstinspires.ftc.teamcode.DriveConstants.kV;
 
 @Config
-@Autonomous(name = "TuneVeloUwU")
+@Autonomous(group = "Tuning")
 public class DriveVelocityPIDTuner extends CommandOpMode {
 
     public static double DISTANCE = 2;
@@ -59,8 +55,9 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
     private DriveSubsystem driveSubsystem;
 
     private TrapezoidProfile motionProfile;
-    private Mode mode;
     private PIDController leftController, rightController;
+
+    private Mode mode;
 
     private static TrapezoidProfile genMotionProfile(boolean movingForward) {
         TrapezoidProfile.State setPoint = new TrapezoidProfile.State((movingForward ? 0 : DISTANCE), 0);
@@ -139,7 +136,6 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
                     TrapezoidProfile.State motionState = motionProfile.calculate(profileTime);
                     double targetPower = kV * motionState.velocity;
                     DifferentialDriveWheelSpeeds velocities = driveSubsystem.getWheelSpeeds();
-
 
                     driveSubsystem.driveAuton(
                             leftController.calculate(velocities.leftMetersPerSecond, targetPower),
