@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.RevIMU;
@@ -25,19 +26,22 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
 import static org.firstinspires.ftc.teamcode.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.DriveConstants.kD;
 import static org.firstinspires.ftc.teamcode.DriveConstants.kI;
 import static org.firstinspires.ftc.teamcode.DriveConstants.kP;
+import static org.firstinspires.ftc.teamcode.DriveConstants.kS;
 import static org.firstinspires.ftc.teamcode.DriveConstants.kV;
 
 @Config
 @Autonomous(group = "Tuning")
-public class DriveVelocityPIDTuner extends CommandOpMode {
+public class TestTuner extends CommandOpMode {
 
     public static double DISTANCE = 2;
     private boolean movingForwards;
     private double lastKp, lastKi, lastKd, profileStart;
     private double prevTime;
+    private DifferentialDriveWheelSpeeds prevSpeeds;
 
     enum Mode {
         DRIVER_MODE,
@@ -57,6 +61,7 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
 
     private TrapezoidProfile motionProfile;
     private PIDController leftController, rightController;
+    private SimpleMotorFeedforward feedForward;
 
     private Mode mode;
 
@@ -91,13 +96,16 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
         leftController = new PIDController(kP, kI, kD);
         rightController = new PIDController(kP, kI, kD);
 
-        prevTime = 0;
+        feedForward = new SimpleMotorFeedforward(kS, kV, kA);
 
         clock = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu, telemetry);
+
+        prevTime = 0;
+        prevSpeeds = driveSubsystem.getWheelSpeeds();
 
         telemetry.addLine("Ready!");
         telemetry.update();
@@ -128,6 +136,7 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
             switch (mode) {
                 case TUNING_MODE:
                     double profileTime = clock.seconds() - profileStart;
+                    double dt = clock.seconds() - prevTime;
 
                     if (profileTime > motionProfile.totalTime()) {
                         // generate a new profile
@@ -140,9 +149,31 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
                     double targetPower = kV * motionState.velocity;
                     DifferentialDriveWheelSpeeds velocities = driveSubsystem.getWheelSpeeds();
 
+                    double leftSpeedSetpoint = velocities.leftMetersPerSecond;
+                    double rightSpeedSetpoint = velocities.rightMetersPerSecond;
+
+                    double leftOutput;
+                    double rightOutput;
+
+                    double leftFeedforward =
+                            feedForward.calculate(leftSpeedSetpoint,
+                                    (leftSpeedSetpoint - prevSpeeds.leftMetersPerSecond) / dt);
+
+                    double rightFeedforward =
+                            feedForward.calculate(rightSpeedSetpoint,
+                                    (rightSpeedSetpoint - prevSpeeds.rightMetersPerSecond) / dt);
+
+                    leftOutput = leftFeedforward
+                            + leftController.calculate(velocities.leftMetersPerSecond,
+                            leftSpeedSetpoint);
+
+                    rightOutput = rightFeedforward
+                            + rightController.calculate(velocities.rightMetersPerSecond,
+                            rightSpeedSetpoint);
+
                     driveSubsystem.driveAuton(
-                            leftController.calculate(velocities.leftMetersPerSecond, targetPower),
-                            rightController.calculate(velocities.rightMetersPerSecond, targetPower)
+                            leftOutput,
+                            rightOutput
                     );
 
                     // update telemetry
@@ -157,6 +188,9 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
                             "errorRight",
                             motionState.velocity - velocities.rightMetersPerSecond
                     );
+
+                    prevTime = clock.seconds();
+                    prevSpeeds = velocities;
                     break;
                 case DRIVER_MODE:
                     driveSubsystem.drive(gamepad1.left_stick_y, gamepad1.right_stick_x);

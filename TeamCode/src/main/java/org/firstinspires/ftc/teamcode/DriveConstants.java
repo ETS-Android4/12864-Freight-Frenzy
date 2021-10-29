@@ -25,8 +25,10 @@ public class DriveConstants {
     public static double kS = 0.0;
 
     // Drive PID
-    public static double kP = 1.0;
+    public static double kP = 1;
     public static double kI = 0.0;
     public static double kD = 0.0;
+
+    //P: 1.8 I: 0 D: 0.003   V: 1.6 A: 0.1 S: 0.01
 
 }

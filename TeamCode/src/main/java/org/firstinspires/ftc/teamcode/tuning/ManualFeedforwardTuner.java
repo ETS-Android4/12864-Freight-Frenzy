@@ -32,7 +32,7 @@ public class ManualFeedforwardTuner extends CommandOpMode {
 
     public static double DISTANCE = 2;
     private boolean movingForwards;
-    private double profileStart, profileTime, prevVelo;
+    private double profileStart, profileTime, prevVelo, prevTime;
 
     enum Mode {
         DRIVER_MODE,
@@ -114,7 +114,7 @@ public class ManualFeedforwardTuner extends CommandOpMode {
             switch (mode) {
                 case TUNING_MODE:
                     // calculate and set the motor power
-                    double prevTime = profileTime;
+                    prevTime = profileTime;
                     profileTime = clock.seconds() - profileStart;
 
                     if (profileTime > motionProfile.totalTime()) {
