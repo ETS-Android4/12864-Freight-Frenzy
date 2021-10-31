@@ -165,8 +165,8 @@ public class DriveVelocityPIDTuner extends CommandOpMode {
 
             if (lastKp != kP || lastKd != kD
                     || lastKi != kI) {
-                leftController = new PIDController(kP, kI, kD);
-                rightController = new PIDController(kP, kI, kD);
+                leftController.setPID(kP, kI, kD);
+                rightController.setPID(kP, kI, kD);
 
                 lastKp = kP;
                 lastKi = kI;

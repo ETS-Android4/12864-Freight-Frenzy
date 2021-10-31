@@ -72,7 +72,7 @@ public class CapstonePipeline extends OpenCvPipeline {
                     biggest = contours.get(index);
             }
 
-            // Creates a point and sets itt to the approximate center of the largest contour
+            // Creates a point and sets it to the approximate center of the largest contour
             Moments moments = Imgproc.moments(biggest);
             centroid = new Point();
 

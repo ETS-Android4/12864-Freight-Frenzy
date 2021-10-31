@@ -66,7 +66,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void drive(double forwardSpeed, double turnSpeed) {
-        differentialArcade.arcadeDrive(-forwardSpeed, -turnSpeed, true);
+        differentialArcade.arcadeDrive(forwardSpeed, turnSpeed, true);
     }
 
     @Override

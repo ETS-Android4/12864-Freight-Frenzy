@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.RamseteCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
-import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.RamseteController;
-import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveKinematics;
@@ -16,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import org.firstinspires.ftc.teamcode.commands.RamseteCommandRe;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
-@Autonomous(name = "robotTwo")
+@Autonomous(name = "AutoNoDuck")
 public class AutonomousFrenzyNoPID extends CommandOpMode {
 
     private Motor frontLeft, backLeft, frontRight, backRight;
@@ -56,13 +54,13 @@ public class AutonomousFrenzyNoPID extends CommandOpMode {
 
         driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu, telemetry);
         driveSubsystem.getWheelSpeeds().normalize(1.5);
-        ramseteCommand = new RamseteCommandRe(TestTrajectory.generateTrajectory(), driveSubsystem::getPose,
+        ramseteCommand = new RamseteCommandRe(Trajectories.traj5(), driveSubsystem::getPose,
                 new RamseteController(DriveConstants.B, DriveConstants.ZETA),
                 driveKinematics,
                 driveSubsystem::driveAuton,
                 telemetry);
 
-        schedule(new ParallelCommandGroup(
+        schedule(new WaitUntilCommand(this::isStarted).andThen(new ParallelCommandGroup(
                 ramseteCommand,
                 new RunCommand(() -> {
 //                    telemetry.addData("CurPos", driveSubsystem.getPose());
@@ -70,7 +68,7 @@ public class AutonomousFrenzyNoPID extends CommandOpMode {
 //                    telemetry.addData("Right Encoders", rightDrive.getPositions());
                     telemetry.update();
                 })
-        ));
+        )));
     }
 
 }
