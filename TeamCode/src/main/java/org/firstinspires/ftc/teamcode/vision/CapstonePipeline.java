@@ -84,6 +84,8 @@ public class CapstonePipeline extends OpenCvPipeline {
 
         }
 
+        mask.release();
+
         return frame;
     }
 

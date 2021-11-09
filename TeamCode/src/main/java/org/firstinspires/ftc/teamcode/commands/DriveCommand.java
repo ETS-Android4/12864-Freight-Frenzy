@@ -21,6 +21,6 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        driveSystem.drive(fSpeed.getAsDouble(), tSpeed.getAsDouble());
+        driveSystem.drive(fSpeed.getAsDouble(), tSpeed.getAsDouble() * 0.9);
     }
 }

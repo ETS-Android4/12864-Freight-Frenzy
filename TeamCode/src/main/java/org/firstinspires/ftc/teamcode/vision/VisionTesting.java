@@ -6,7 +6,7 @@ import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "beepboop")
+@Autonomous(name = "visionTesting")
 public class VisionTesting extends CommandOpMode {
 
     private CapstoneDetector capstoneDetector;
