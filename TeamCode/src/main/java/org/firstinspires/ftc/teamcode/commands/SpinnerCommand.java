@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SpinnerSubsystem;
 
 public class SpinnerCommand extends CommandBase {
 
-    private SpinnerSubsystem spinnerSubsystem;
+    private final SpinnerSubsystem spinnerSubsystem;
     private boolean spinSide;
 
     public SpinnerCommand(SpinnerSubsystem subsystem, boolean side) {

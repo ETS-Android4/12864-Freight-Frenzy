@@ -1,21 +1,26 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.soMuchAuto;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.RamseteController;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveKinematics;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+import org.firstinspires.ftc.teamcode.DriveConstants;
+import org.firstinspires.ftc.teamcode.MotorGroupTemp;
+import org.firstinspires.ftc.teamcode.Trajectories;
 import org.firstinspires.ftc.teamcode.commands.RamseteCommandRe;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
-@Autonomous(name="AutoBlueLittle")
-public class AutoBlue2 extends CommandOpMode {
+@Autonomous(name = "robot")
+public class AutonomousFrenzy extends CommandOpMode {
 
     private Motor frontLeft, backLeft, frontRight, backRight;
     private MotorGroupTemp leftDrive, rightDrive;
@@ -37,15 +42,15 @@ public class AutoBlue2 extends CommandOpMode {
         rightDrive = new MotorGroupTemp(frontRight, backRight);
         rightDrive.setInverted(true);
 
-        frontLeft.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        backRight.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
 
-        frontLeft.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRight.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeft.motor.setMode(RunMode.RUN_USING_ENCODER);
+        backLeft.motor.setMode(RunMode.RUN_USING_ENCODER);
+        frontRight.motor.setMode(RunMode.RUN_USING_ENCODER);
+        backRight.motor.setMode(RunMode.RUN_USING_ENCODER);
 
 
         imu = new RevIMU(hardwareMap);
@@ -54,13 +59,15 @@ public class AutoBlue2 extends CommandOpMode {
 
         driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu, telemetry);
         driveSubsystem.getWheelSpeeds().normalize(1.5);
-        ramseteCommand = new RamseteCommandRe(Trajectories.traj2(), driveSubsystem::getPose,
+        ramseteCommand = new RamseteCommandRe(Trajectories.traj1(), driveSubsystem::getPose,
                 new RamseteController(DriveConstants.B, DriveConstants.ZETA),
-                driveKinematics,
-                driveSubsystem::driveAuton,
-                telemetry);
+                new SimpleMotorFeedforward(DriveConstants.kS, DriveConstants.kV, DriveConstants.kA),
+                driveKinematics, driveSubsystem::getWheelSpeeds,
+                new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD),
+                new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD),
+                driveSubsystem::driveAuton, telemetry);
 
-        schedule(new WaitUntilCommand(this::isStarted).andThen(new ParallelCommandGroup(
+        schedule(new WaitUntilCommand(this::isStarted), new ParallelCommandGroup(
                 ramseteCommand,
                 new RunCommand(() -> {
 //                    telemetry.addData("CurPos", driveSubsystem.getPose());
@@ -68,7 +75,7 @@ public class AutoBlue2 extends CommandOpMode {
 //                    telemetry.addData("Right Encoders", rightDrive.getPositions());
                     telemetry.update();
                 })
-        )));
+        ));
     }
 
 }

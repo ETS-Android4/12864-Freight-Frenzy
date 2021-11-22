@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.soMuchAuto;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
@@ -9,13 +9,16 @@ import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveKinematics;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.DriveConstants;
+import org.firstinspires.ftc.teamcode.MotorGroupTemp;
+import org.firstinspires.ftc.teamcode.Trajectories;
 import org.firstinspires.ftc.teamcode.commands.RamseteCommandRe;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
-@Autonomous(name = "AutoNoDuckBlue")
-public class AutoBlue extends CommandOpMode {
+@Autonomous(name="AutoBlueLittle")
+public class AutoBlue2 extends CommandOpMode {
 
     private Motor frontLeft, backLeft, frontRight, backRight;
     private MotorGroupTemp leftDrive, rightDrive;
@@ -37,15 +40,15 @@ public class AutoBlue extends CommandOpMode {
         rightDrive = new MotorGroupTemp(frontRight, backRight);
         rightDrive.setInverted(true);
 
-        frontLeft.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        backRight.motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        frontLeft.motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
-        backRight.motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
+        frontLeft.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         imu = new RevIMU(hardwareMap);
@@ -54,7 +57,7 @@ public class AutoBlue extends CommandOpMode {
 
         driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu, telemetry);
         driveSubsystem.getWheelSpeeds().normalize(1.5);
-        ramseteCommand = new RamseteCommandRe(Trajectories.traj4(), driveSubsystem::getPose,
+        ramseteCommand = new RamseteCommandRe(Trajectories.traj2(), driveSubsystem::getPose,
                 new RamseteController(DriveConstants.B, DriveConstants.ZETA),
                 driveKinematics,
                 driveSubsystem::driveAuton,

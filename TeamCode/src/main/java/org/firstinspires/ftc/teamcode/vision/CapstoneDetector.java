@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.vision.CapstonePipeline;
 import org.opencv.core.Scalar;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -13,10 +12,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class CapstoneDetector {
 
     private OpenCvCamera camera;
-    private String cameraName;
+    private final String cameraName;
     private CapstonePipeline capstonePipeline;
-    private HardwareMap hardwareMap;
-    private int width, height;
+    private final HardwareMap hardwareMap;
+    private final int width, height;
 
     public CapstoneDetector(HardwareMap hMap, String camName) {
         hardwareMap = hMap;

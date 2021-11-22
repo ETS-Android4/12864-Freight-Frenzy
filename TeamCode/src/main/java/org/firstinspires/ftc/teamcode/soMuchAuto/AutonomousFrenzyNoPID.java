@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.soMuchAuto;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
@@ -11,6 +11,9 @@ import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveKinem
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+import org.firstinspires.ftc.teamcode.DriveConstants;
+import org.firstinspires.ftc.teamcode.MotorGroupTemp;
+import org.firstinspires.ftc.teamcode.Trajectories;
 import org.firstinspires.ftc.teamcode.commands.RamseteCommandRe;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 

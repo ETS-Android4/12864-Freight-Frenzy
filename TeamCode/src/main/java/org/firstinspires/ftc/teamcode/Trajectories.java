@@ -112,5 +112,23 @@ public class Trajectories {
 
         return TrajectoryGenerator.generateTrajectory(start, interiorWaypoints, end, config);
     }
+
+    public static Trajectory yNoWork() {
+        Pose2d start = new Pose2d(0.3, 0.0, new Rotation2d(0.0));
+
+        Pose2d end = new Pose2d(0.1, 1.3, new Rotation2d(0.0));
+
+        ArrayList interiorWaypoints = new ArrayList<Translation2d>();
+
+        interiorWaypoints.add(new Translation2d(0.3, 1.0));
+        interiorWaypoints.add(new Translation2d(0.2, 1.5));
+
+
+        TrajectoryConfig config = new TrajectoryConfig(1.5, 1.5);
+
+        return TrajectoryGenerator.generateTrajectory(start, interiorWaypoints, end, config);
+
+
+    }
 }
 
