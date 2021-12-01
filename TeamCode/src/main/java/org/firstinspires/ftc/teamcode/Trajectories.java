@@ -13,8 +13,22 @@ import java.util.ArrayList;
 @Config
 public class Trajectories {
 
-    public static double endX = 1.0, endY = 0.8;
+    public static double endX = 0.3, endY = 0, firstX = 0.1, firstY = 0.0;
 
+    public static Trajectory testing() {
+        Pose2d start = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+
+        Pose2d end = new Pose2d(endX, endY, new Rotation2d(0.0));
+
+        ArrayList interiorWaypoints = new ArrayList<Translation2d>();
+
+        interiorWaypoints.add(new Translation2d(firstX, firstY));
+
+
+        TrajectoryConfig config = new TrajectoryConfig(1.5, 1.5);
+
+        return TrajectoryGenerator.generateTrajectory(start, interiorWaypoints, end, config);
+    }
 
     public static Trajectory testTraj() {
 
@@ -127,8 +141,6 @@ public class Trajectories {
         TrajectoryConfig config = new TrajectoryConfig(1.5, 1.5);
 
         return TrajectoryGenerator.generateTrajectory(start, interiorWaypoints, end, config);
-
-
     }
 }
 
