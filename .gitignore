@@ -87,3 +87,4 @@ lint/tmp/
 # lint/reports/
 .idea/runConfigurations.xml
 .idea/misc.xml
+*.xml
