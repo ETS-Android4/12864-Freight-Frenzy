@@ -13,12 +13,12 @@ public class DropOffSubsystem extends SubsystemBase {
     }
 
     public void drop() {
-        dropOffLeft.turnToAngle(65.0);
-//        dropOffRight.turnToAngle(-5.0);
+        dropOffLeft.setPosition(0.6);
+        dropOffRight.setPosition(0.9);
     }
 
     public void returnHome() {
-//        dropOffRight.turnToAngle(0.0);
-        dropOffLeft.turnToAngle(0.0);
+        dropOffRight.setPosition(0.5);
+        dropOffLeft.setPosition(1.0);
     }
 }
