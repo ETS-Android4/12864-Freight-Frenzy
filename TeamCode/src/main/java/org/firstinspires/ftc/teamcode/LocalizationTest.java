@@ -51,7 +51,7 @@ public class LocalizationTest extends CommandOpMode {
             telemetry.update();
         }));
 
-        driveCommand = new DriveCommand(driveSubsystem, gamepad::getRightX, gamepad::getLeftY);
+        driveCommand = new DriveCommand(driveSubsystem, gamepad::getLeftY, gamepad::getRightX);
 
         schedule(driveCommand);
     }

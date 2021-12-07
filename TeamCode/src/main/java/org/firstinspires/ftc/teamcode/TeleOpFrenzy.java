@@ -61,6 +61,7 @@ public class TeleOpFrenzy extends CommandOpMode {
 
         leftDrive = new MotorGroupTemp(frontLeft, backLeft);
         rightDrive = new MotorGroupTemp(frontRight, backRight);
+        rightDrive.setInverted(true);
 
         duckSpinner = new Motor(hardwareMap, "dS");
 

@@ -32,7 +32,7 @@ public class DriveSubsystem extends SubsystemBase {
         telemetry = tele;
 
         resetEncoders();
-        differentialArcade = new DifferentialDrive(leftDrive, rightDrive);
+        differentialArcade = new DifferentialDrive(false, leftDrive, rightDrive);
         driveOdometry = new DifferentialDriveOdometry(imu.getRotation2d());
     }
 
