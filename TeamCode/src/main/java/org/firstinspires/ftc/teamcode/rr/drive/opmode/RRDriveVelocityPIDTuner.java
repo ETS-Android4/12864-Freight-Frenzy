@@ -62,7 +62,7 @@ import java.util.List;
  */
 @Config
 @Autonomous(group = "drive")
-public class DriveVelocityPIDTuner extends CommandOpMode {
+public class RRDriveVelocityPIDTuner extends CommandOpMode {
 
     public static double DISTANCE = 72; // in
 
