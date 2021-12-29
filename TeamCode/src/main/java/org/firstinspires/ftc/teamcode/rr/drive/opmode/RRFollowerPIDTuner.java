@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.rr.commands.TrajectoryFollowerCommand;
@@ -50,7 +51,7 @@ public class RRFollowerPIDTuner extends CommandOpMode {
 
         drive.setPoseEstimate(startPose);
 
-        schedule(new RunCommand(() -> {
+        schedule(new WaitUntilCommand(this::isStarted).andThen(new RunCommand(() -> {
             if (trajGroup == null || trajGroup.isFinished() || !trajGroup.isScheduled()) {
                 Trajectory traj = drive.trajectoryBuilder(startPose)
                         .forward(DISTANCE)
@@ -61,7 +62,6 @@ public class RRFollowerPIDTuner extends CommandOpMode {
                         .whenFinished(() -> startPose = traj.end().plus(new Pose2d(0, 0, Math.toRadians(90))));
                 trajGroup.schedule();
             }
-        }));
+        })));
     }
-
 }

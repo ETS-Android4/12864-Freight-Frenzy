@@ -88,3 +88,4 @@ lint/tmp/
 .idea/runConfigurations.xml
 .idea/misc.xml
 *.xml
+.idea/compiler.xml

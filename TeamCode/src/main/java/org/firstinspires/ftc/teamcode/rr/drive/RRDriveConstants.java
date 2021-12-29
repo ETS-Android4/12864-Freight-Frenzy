@@ -35,8 +35,7 @@ public class RRDriveConstants {
      */
     // getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV)
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, 14.38);
-
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(45, 0, 14, 14.5);
     /*
      * These are physical constants that can be determined from your robot (including the track
      * width; it will be tune empirically later although a rough estimate is important). Users are
@@ -47,7 +46,7 @@ public class RRDriveConstants {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 13.7; // in
+    public static double TRACK_WIDTH = 19.3; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -99,10 +98,11 @@ public class RRDriveConstants {
      * https://github.com/acmerobotics/road-runner-quickstart/issues/91
 
      */
-    public static double MAX_VEL = 59.478;
-    public static double MAX_ACCEL = 90;
-    public static double MAX_ANG_VEL = Math.toRadians(286.4788975654116);
-    public static double MAX_ANG_ACCEL = Math.toRadians(286.4788975654116);
+    // 71.607
+    public static double MAX_VEL = 64.4463;
+    public static double MAX_ACCEL = 60;
+    public static double MAX_ANG_VEL = Math.toRadians(209.71);
+    public static double MAX_ANG_ACCEL = Math.toRadians(209.71);
 
 
     public static double encoderTicksToInches(double ticks) {

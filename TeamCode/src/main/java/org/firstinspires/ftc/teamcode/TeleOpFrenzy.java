@@ -100,8 +100,8 @@ public class TeleOpFrenzy extends CommandOpMode {
 //        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(liftCommand);
         driver.getGamepadButton(GamepadKeys.Button.Y).toggleWhenPressed(dropOffCommand);
         driver.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(liftCommandNoPID);
-        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(new StartEndCommand(() -> intakeMotor.set(-0.9), () -> intakeMotor.stopMotor()));
-        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(new StartEndCommand(() -> intakeMotor.set(0.9), () -> intakeMotor.stopMotor()));
+        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(new StartEndCommand(() -> intakeMotor.set(0.9), () -> intakeMotor.stopMotor()));
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(new StartEndCommand(() -> intakeMotor.set(-0.9), () -> intakeMotor.stopMotor()));
 
 
         register(driveSubsystem);
