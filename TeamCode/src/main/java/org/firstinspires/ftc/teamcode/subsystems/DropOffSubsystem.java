@@ -1,11 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 
+@Config
 public class DropOffSubsystem extends SubsystemBase {
     private final SimpleServo dropOffRight;
     private final SimpleServo dropOffLeft;
+
+    public static double startLeft = 0.8, startRight = 0.5;
+    public static double endLeft = 0.4, endRight = 0.9;
+
 
     public DropOffSubsystem(SimpleServo dropOffLeft, SimpleServo dropOffRight) {
         this.dropOffLeft = dropOffLeft;
@@ -13,12 +19,12 @@ public class DropOffSubsystem extends SubsystemBase {
     }
 
     public void drop() {
-        dropOffLeft.setPosition(0.6);
-        dropOffRight.setPosition(0.9);
+        dropOffLeft.setPosition(endLeft);
+        dropOffRight.setPosition(endRight);
     }
 
     public void returnHome() {
-        dropOffRight.setPosition(0.5);
-        dropOffLeft.setPosition(1.0);
+        dropOffRight.setPosition(startRight);
+        dropOffLeft.setPosition(startLeft);
     }
 }

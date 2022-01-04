@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,6 +13,8 @@ public class LiftCommandNoPID extends CommandBase {
     private int level = 0;
     private double timeToLift = 0.4;
 
+    public static double toBottom = 1.35, toTier2 = 0.45, toTier3 = 1.5;
+
     public LiftCommandNoPID(LiftSubsystemNoPID liftSubsystemNoPID, ElapsedTime timer) {
         liftSubsystem = liftSubsystemNoPID;
         time = timer;
@@ -22,15 +25,15 @@ public class LiftCommandNoPID extends CommandBase {
         time.reset();
         if (level == 0) {
             liftSubsystem.motorUp();
-            timeToLift = 0.4;
+            timeToLift = toTier2;
             level++;
         } else if (level == 1) {
             liftSubsystem.motorUp();
-            timeToLift = 0.7;
+            timeToLift = toTier3;
             level++;
         } else {
             liftSubsystem.motorDown();
-            timeToLift = 1.2;
+            timeToLift = toBottom;
             level = 0;
         }
     }
@@ -42,7 +45,6 @@ public class LiftCommandNoPID extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        if(level != 2)
-            liftSubsystem.motorStop();
+        liftSubsystem.motorStop();
     }
 }
