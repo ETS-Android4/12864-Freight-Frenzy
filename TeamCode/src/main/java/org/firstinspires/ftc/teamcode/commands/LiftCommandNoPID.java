@@ -10,6 +10,7 @@ public class LiftCommandNoPID extends CommandBase {
 
     private LiftSubsystemNoPID liftSubsystem;
     private ElapsedTime time;
+    //you get none
     private int level = 0;
     private double timeToLift = 0.4;
 
@@ -19,6 +20,13 @@ public class LiftCommandNoPID extends CommandBase {
         liftSubsystem = liftSubsystemNoPID;
         time = timer;
     }
+
+    public LiftCommandNoPID(LiftSubsystemNoPID liftSubsystemNoPID, ElapsedTime timer, int levelSt) {
+        liftSubsystem = liftSubsystemNoPID;
+        time = timer;
+        level = levelSt;
+    }
+
 
     @Override
     public void initialize() {

@@ -9,8 +9,8 @@ public class DropOffSubsystem extends SubsystemBase {
     private final SimpleServo dropOffRight;
     private final SimpleServo dropOffLeft;
 
-    public static double startLeft = 0.8, startRight = 0.5;
-    public static double endLeft = 0.4, endRight = 0.9;
+    public static double startLeft = 0.35, startRight = 0.5;
+    public static double endLeft = -0.5, endRight = 0.9;
 
 
     public DropOffSubsystem(SimpleServo dropOffLeft, SimpleServo dropOffRight) {
