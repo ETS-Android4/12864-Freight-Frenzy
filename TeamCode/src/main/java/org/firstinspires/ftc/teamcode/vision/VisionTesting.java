@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name = "visionTesting")
@@ -19,8 +20,9 @@ public class VisionTesting extends CommandOpMode {
 
         FtcDashboard.getInstance().startCameraStream(capstoneDetector.getCamera(), 30);
 
-        schedule(new WaitCommand(500).andThen(new RunCommand(() -> {
+        schedule(new WaitUntilCommand(this::isStarted).andThen(new RunCommand(() -> {
             telemetry.addData("Capstone Placement", capstoneDetector.getPlacement());
+            telemetry.addData("Lift Pos", capstoneDetector.placementId());
             telemetry.update();
         })));
     }

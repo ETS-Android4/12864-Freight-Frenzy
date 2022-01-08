@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.commands.paths;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.ParallelDeadlineGroup;
@@ -11,22 +15,47 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.DropOffCommand;
+import org.firstinspires.ftc.teamcode.commands.LiftCommandNoPID;
 import org.firstinspires.ftc.teamcode.rr.commands.TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.rr.commands.TurnCommand;
+import org.firstinspires.ftc.teamcode.rr.drive.RRDriveConstants;
 import org.firstinspires.ftc.teamcode.rr.subsystems.TankDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DropOffSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystemNoPID;
+
+import java.util.Arrays;
+import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
 
 public class FreightSideRed extends SequentialCommandGroup {
 
     private Pose2d startPos = new Pose2d(12.0, -63.0, Math.toRadians(90.0));
 
     public FreightSideRed(TankDriveSubsystem driveSubsystem, LiftSubsystemNoPID liftSubsystem,
-                          ElapsedTime time, DropOffSubsystem dropOffSubsystem) {
+                          ElapsedTime time, DropOffSubsystem dropOffSubsystem, int location) {
         driveSubsystem.setPoseEstimate(startPos);
 
-        Trajectory traj0 = driveSubsystem.trajectoryBuilder(startPos)
+        Trajectory push1 = driveSubsystem.trajectoryBuilder(startPos)
+                .forward(25.0,
+                        new MinVelocityConstraint(Arrays.asList(
+                                new AngularVelocityConstraint(RRDriveConstants.MAX_ANG_VEL),
+                                new MecanumVelocityConstraint(40, RRDriveConstants.TRACK_WIDTH)
+                        )),
+                        new ProfileAccelerationConstraint(35.0))
+                .build();
+
+        Trajectory push2 = driveSubsystem.trajectoryBuilder(push1.end())
+                .back(25.0,
+                        new MinVelocityConstraint(Arrays.asList(
+                                new AngularVelocityConstraint(RRDriveConstants.MAX_ANG_VEL),
+                                new MecanumVelocityConstraint(40, RRDriveConstants.TRACK_WIDTH)
+                        )),
+                        new ProfileAccelerationConstraint(35.0))
+                .build();
+
+        Trajectory traj0 = driveSubsystem.trajectoryBuilder(push2.end())
                 .splineTo(new Vector2d(-12.0, -60.0), Math.toRadians(270.0))
                 .build();
 
@@ -44,14 +73,24 @@ public class FreightSideRed extends SequentialCommandGroup {
                 .build();
 
         addCommands(
+                new TrajectoryFollowerCommand(driveSubsystem, push1),
+                new WaitCommand(500),
+                new TrajectoryFollowerCommand(driveSubsystem, push2),
                 new TrajectoryFollowerCommand(driveSubsystem, traj0),
-                new TurnCommand(driveSubsystem, Math.toRadians(-10.0)),
+                new TurnCommand(driveSubsystem, Math.toRadians(-10.0))
+                        .alongWith(new LiftCommandNoPID(liftSubsystem, time, location)
+                        ),
                 new TrajectoryFollowerCommand(driveSubsystem, traj1),
+                new WaitCommand(1000),
                 new InstantCommand(() -> dropOffSubsystem.drop()),
                 new WaitCommand(2000),
                 new InstantCommand(() -> dropOffSubsystem.returnHome()),
+                new WaitCommand(500),
+                new LiftCommandNoPID(liftSubsystem, time, 4),
                 new WaitCommand(1000),
-                new TrajectoryFollowerCommand(driveSubsystem, traj2),
+                new TrajectoryFollowerCommand(driveSubsystem, traj2)
+                        .alongWith(new LiftCommandNoPID(liftSubsystem, time, 2)
+                        ),
                 new TurnCommand(driveSubsystem, Math.toRadians(95.0)),
                 new TrajectoryFollowerCommand(driveSubsystem, traj3)
         );

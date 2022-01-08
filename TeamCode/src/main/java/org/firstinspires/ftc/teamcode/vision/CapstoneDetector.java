@@ -87,4 +87,17 @@ public class CapstoneDetector {
         CENTER
     }
 
+    public int placementId() {
+        switch (getPlacement()) {
+//            case LEFT:
+//                return 3;
+            case CENTER:
+                return 0;
+            case RIGHT:
+                return 1;
+            default:
+                return 3;
+        }
+    }
+
 }

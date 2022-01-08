@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystemNoPID;
 
+import java.util.function.IntSupplier;
+
 public class LiftCommandNoPID extends CommandBase {
 
     private LiftSubsystemNoPID liftSubsystem;
@@ -27,11 +29,23 @@ public class LiftCommandNoPID extends CommandBase {
         level = levelSt;
     }
 
+    public LiftCommandNoPID(LiftSubsystemNoPID liftSubsystemNoPID, ElapsedTime timer, IntSupplier levelSt) {
+        liftSubsystem = liftSubsystemNoPID;
+        time = timer;
+        level = levelSt.getAsInt();
+    }
 
     @Override
     public void initialize() {
         time.reset();
-        if (level == 0) {
+        if (level == 3) {
+            end(true);
+            level = 0;
+        } else if (level == 4) {
+            liftSubsystem.motorUp();
+            timeToLift = toTier3 + 0.2;
+            level = 2;
+        } else if (level == 0) {
             liftSubsystem.motorUp();
             timeToLift = toTier2;
             level++;

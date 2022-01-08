@@ -28,8 +28,16 @@ public class CapstonePipeline extends OpenCvPipeline {
 
     // Initializes color bounds declared above to defaults
     public CapstonePipeline() {
-        low = new Scalar(31, 152, 95);
-        high = new Scalar(162, 255, 128);
+        // Red
+//        low = new Scalar(31, 152, 95);
+//        high = new Scalar(162, 255, 128);
+        // Neon Green
+        low = new Scalar(28, 80, 109);
+        high = new Scalar(160, 110, 131);
+        // Pink
+//        low = new Scalar(56, 129, 140);
+//        high = new Scalar(151, 173, 185);
+
     }
 
     // Allows for user to set their own color bounds
