@@ -22,4 +22,8 @@ public class LiftSubsystemNoPID extends SubsystemBase {
     public void motorStop() {
         motor.stopMotor();
     }
+
+    public void slowMotorDown(){
+        motor.set(-0.2);
+    }
 }

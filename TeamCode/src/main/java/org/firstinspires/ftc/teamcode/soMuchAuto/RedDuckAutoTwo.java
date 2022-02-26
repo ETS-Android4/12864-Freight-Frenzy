@@ -12,19 +12,22 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.commands.paths.FreightSideRed;
+import org.firstinspires.ftc.teamcode.commands.paths.DuckParkBlue;
+import org.firstinspires.ftc.teamcode.commands.paths.DuckParkRed;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleTankDrive;
 import org.firstinspires.ftc.teamcode.rr.subsystems.TankDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DropOffSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystemNoPID;
+import org.firstinspires.ftc.teamcode.subsystems.SpinnerSubsystem;
 import org.firstinspires.ftc.teamcode.vision.CapstoneDetector;
 
 import java.util.HashMap;
 
-@Autonomous(name = "Red Freight")
-public class RRAutoTesting extends CommandOpMode {
+@Autonomous(name = "RedRedRed")
+public class RedDuckAutoTwo extends CommandOpMode {
 
     private Motor liftMotor;
+    private Motor duckSpinner;
 
     private SimpleServo dropOffLeft;
     private SimpleServo dropOffRight;
@@ -37,8 +40,8 @@ public class RRAutoTesting extends CommandOpMode {
     private TankDriveSubsystem tankDriveSubsystem;
 
     private LiftSubsystemNoPID liftSubsystemNoPID;
-
     private DropOffSubsystem dropOffSubsystem;
+    private SpinnerSubsystem spinnerSubsystem;
 
     private CapstoneDetector.Placement location;
 
@@ -46,6 +49,8 @@ public class RRAutoTesting extends CommandOpMode {
     public void initialize() {
 
         liftMotor = new Motor(hardwareMap, "liftM", Motor.GoBILDA.RPM_312);
+
+        duckSpinner = new Motor(hardwareMap, "dS");
 
         dropOffLeft = new SimpleServo(hardwareMap, "dropSL", -90, 90);
         dropOffRight = new SimpleServo(hardwareMap, "dropSR", -90, 90);
@@ -61,6 +66,8 @@ public class RRAutoTesting extends CommandOpMode {
 
         dropOffSubsystem = new DropOffSubsystem(dropOffLeft, dropOffRight);
 
+        spinnerSubsystem = new SpinnerSubsystem(duckSpinner);
+
         schedule(new WaitUntilCommand(this::isStarted)
                 .andThen(new InstantCommand(() -> capstoneDetector.init()
                 )).andThen(new WaitCommand(2000))
@@ -73,16 +80,16 @@ public class RRAutoTesting extends CommandOpMode {
                         new SelectCommand(new HashMap<Object, Command>() {{
                             put(CapstoneDetector.Placement.RIGHT,
                                     (new InstantCommand(() -> capstoneDetector.getCamera().stopStreaming())
-                                            .andThen(new FreightSideRed(tankDriveSubsystem, liftSubsystemNoPID,
-                                                    time, dropOffSubsystem, 1))));
+                                            .andThen(new DuckParkRed(tankDriveSubsystem,
+                                                    time, dropOffSubsystem, 1, spinnerSubsystem))));
                             put(CapstoneDetector.Placement.CENTER,
                                     (new InstantCommand(() -> capstoneDetector.getCamera().stopStreaming())
-                                            .andThen(new FreightSideRed(tankDriveSubsystem, liftSubsystemNoPID,
-                                                    time, dropOffSubsystem, 0))));
+                                            .andThen(new DuckParkRed(tankDriveSubsystem,
+                                                    time, dropOffSubsystem, 0, spinnerSubsystem))));
                             put(CapstoneDetector.Placement.LEFT,
                                     (new InstantCommand(() -> capstoneDetector.getCamera().stopStreaming())
-                                            .andThen(new FreightSideRed(tankDriveSubsystem, liftSubsystemNoPID,
-                                                    time, dropOffSubsystem, 3))));
+                                            .andThen(new DuckParkRed(tankDriveSubsystem,
+                                                    time, dropOffSubsystem, 3, spinnerSubsystem))));
                         }}, () -> location
                         )));
     }

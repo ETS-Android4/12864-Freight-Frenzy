@@ -16,7 +16,7 @@ public class LiftCommandNoPID extends CommandBase {
     private int level = 0;
     private double timeToLift = 0.4;
 
-    public static double toBottom = 1.35, toTier2 = 0.45, toTier3 = 1.5;
+    public static double toBottom = 1.35, toTier2 = 0.48, toTier3 = 1.5;
 
     public LiftCommandNoPID(LiftSubsystemNoPID liftSubsystemNoPID, ElapsedTime timer) {
         liftSubsystem = liftSubsystemNoPID;

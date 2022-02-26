@@ -48,7 +48,6 @@ public class CapstonePipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-
         frame = new Mat();
         output = new Mat();
         mask = new Mat(output.rows(), output.cols(), CvType.CV_8UC4);
@@ -68,8 +67,9 @@ public class CapstonePipeline extends OpenCvPipeline {
         Mat hierarchy = new Mat();
         Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        // Draws contours onto the frame from the list created above. During this it searches for
-        // the biggest contour and saves it to the variable biggest.
+        // Contours put simply are outlines of objects with the same color.
+        // The following draws contours onto the frame from the list created above.
+        // During this it searches for the biggest contour and saves it to the variable biggest.
         if (hierarchy.size().height > 0 && hierarchy.size().width > 0) {
             MatOfPoint biggest = new MatOfPoint();
             for (int index = 0; index >= 0; index = (int) hierarchy.get(0, index)[0]) {
@@ -93,6 +93,8 @@ public class CapstonePipeline extends OpenCvPipeline {
         }
 
         mask.release();
+        hierarchy.release();
+        output.release();
 
         return frame;
     }

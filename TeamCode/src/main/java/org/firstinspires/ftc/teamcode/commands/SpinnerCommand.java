@@ -17,7 +17,7 @@ public class SpinnerCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        spinnerSubsystem.spin(spinSide ? -0.4 : 0.4);
+        spinnerSubsystem.spin(spinSide ? -0.35 : 0.35);
     }
 
     @Override

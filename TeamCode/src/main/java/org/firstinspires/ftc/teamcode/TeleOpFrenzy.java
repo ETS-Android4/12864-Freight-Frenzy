@@ -52,6 +52,8 @@ public class TeleOpFrenzy extends CommandOpMode {
     private DropOffSubsystem dropOffSubsystem;
     private DropOffCommand dropOffCommand;
 
+    private double multiplier = 1.0;
+
     @Override
     public void initialize() {
         frontLeft = new Motor(hardwareMap, "fL");
@@ -78,7 +80,7 @@ public class TeleOpFrenzy extends CommandOpMode {
         time = new ElapsedTime();
 
         driveSubsystem = new DriveSubsystem(leftDrive, rightDrive, imu, telemetry);
-        driveCommand = new DriveCommand(driveSubsystem, driver::getLeftY, driver::getRightX);
+        driveCommand = new DriveCommand(driveSubsystem, driver::getLeftY, driver::getRightX, () -> multiplier);
 
         spinnerSubsystem = new SpinnerSubsystem(duckSpinner);
         spinnerCommand = new SpinnerCommand(spinnerSubsystem, true);
@@ -102,7 +104,8 @@ public class TeleOpFrenzy extends CommandOpMode {
         driver.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(liftCommandNoPID);
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(new StartEndCommand(() -> intakeMotor.set(0.9), () -> intakeMotor.stopMotor()));
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(new StartEndCommand(() -> intakeMotor.set(-0.9), () -> intakeMotor.stopMotor()));
-
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenHeld(new StartEndCommand(() -> liftSubsystemNoPID.slowMotorDown(), () -> liftSubsystemNoPID.motorStop(), liftSubsystemNoPID));
+        driver.getGamepadButton(GamepadKeys.Button.X).toggleWhenPressed(new InstantCommand(() -> multiplier = 0.65), new InstantCommand(() -> multiplier = 1.0));
 
         register(driveSubsystem);
         driveSubsystem.setDefaultCommand(driveCommand);

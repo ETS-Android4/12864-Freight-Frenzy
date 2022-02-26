@@ -12,17 +12,18 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.commands.paths.FreightSideRed;
+import org.firstinspires.ftc.teamcode.commands.paths.FreightSideBlue;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleTankDrive;
 import org.firstinspires.ftc.teamcode.rr.subsystems.TankDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DropOffSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystemNoPID;
 import org.firstinspires.ftc.teamcode.vision.CapstoneDetector;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.HashMap;
 
-@Autonomous(name = "Red Freight")
-public class RRAutoTesting extends CommandOpMode {
+@Autonomous(name = "Blue Freight")
+public class BlueFreightAuto extends CommandOpMode {
 
     private Motor liftMotor;
 
@@ -41,6 +42,8 @@ public class RRAutoTesting extends CommandOpMode {
     private DropOffSubsystem dropOffSubsystem;
 
     private CapstoneDetector.Placement location;
+    private int width = 432;
+    private int height = 240;
 
     @Override
     public void initialize() {
@@ -73,15 +76,15 @@ public class RRAutoTesting extends CommandOpMode {
                         new SelectCommand(new HashMap<Object, Command>() {{
                             put(CapstoneDetector.Placement.RIGHT,
                                     (new InstantCommand(() -> capstoneDetector.getCamera().stopStreaming())
-                                            .andThen(new FreightSideRed(tankDriveSubsystem, liftSubsystemNoPID,
+                                            .andThen(new FreightSideBlue(tankDriveSubsystem, liftSubsystemNoPID,
                                                     time, dropOffSubsystem, 1))));
                             put(CapstoneDetector.Placement.CENTER,
                                     (new InstantCommand(() -> capstoneDetector.getCamera().stopStreaming())
-                                            .andThen(new FreightSideRed(tankDriveSubsystem, liftSubsystemNoPID,
+                                            .andThen(new FreightSideBlue(tankDriveSubsystem, liftSubsystemNoPID,
                                                     time, dropOffSubsystem, 0))));
                             put(CapstoneDetector.Placement.LEFT,
                                     (new InstantCommand(() -> capstoneDetector.getCamera().stopStreaming())
-                                            .andThen(new FreightSideRed(tankDriveSubsystem, liftSubsystemNoPID,
+                                            .andThen(new FreightSideBlue(tankDriveSubsystem, liftSubsystemNoPID,
                                                     time, dropOffSubsystem, 3))));
                         }}, () -> location
                         )));

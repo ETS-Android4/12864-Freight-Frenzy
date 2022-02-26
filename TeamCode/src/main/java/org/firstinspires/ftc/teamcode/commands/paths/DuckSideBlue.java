@@ -24,22 +24,22 @@ import org.firstinspires.ftc.teamcode.subsystems.SpinnerSubsystem;
 
 import java.util.Arrays;
 
-public class DuckSideRed extends SequentialCommandGroup {
+public class DuckSideBlue extends SequentialCommandGroup {
 
-    private Pose2d startPos = new Pose2d(-36.0, -63.0, Math.toRadians(90.0));
+    private Pose2d startPos = new Pose2d(-36.0, 63.0, Math.toRadians(-90.0));
 
-    public DuckSideRed(TankDriveSubsystem driveSubsystem, LiftSubsystemNoPID liftSubsystem,
-                       ElapsedTime time, DropOffSubsystem dropOffSubsystem, int location,
-                       SpinnerSubsystem spinnerSubsystem) {
+    public DuckSideBlue(TankDriveSubsystem driveSubsystem, LiftSubsystemNoPID liftSubsystem,
+                        ElapsedTime time, DropOffSubsystem dropOffSubsystem, int location,
+                        SpinnerSubsystem spinnerSubsystem) {
 
         driveSubsystem.setPoseEstimate(startPos);
 
         Trajectory traj0 = driveSubsystem.trajectoryBuilder(startPos)
-                .splineTo(new Vector2d(-12.0, -50.0), Math.toRadians(270.0))
+                .splineTo(new Vector2d(-12.0, 55.0), Math.toRadians(-270.0))
                 .build();
 
         Trajectory traj1 = driveSubsystem.trajectoryBuilder(new Pose2d(traj0.end().vec(),
-                traj0.end().getHeading() + Math.toRadians(19.0)))
+                traj0.end().getHeading() + Math.toRadians(-19.0)))
                 .back(10.0)
                 .build();
 
@@ -48,11 +48,11 @@ public class DuckSideRed extends SequentialCommandGroup {
                 .build();
 
         Trajectory traj3 = driveSubsystem.trajectoryBuilder(traj2.end())
-                .forward(36.0)
+                .forward(45.0)
                 .build();
 
         Trajectory traj4 = driveSubsystem.trajectoryBuilder(traj3.end())
-                .forward(20.0, new MinVelocityConstraint(Arrays.asList(
+                .forward(40.0, new MinVelocityConstraint(Arrays.asList(
                         new AngularVelocityConstraint(RRDriveConstants.MAX_ANG_VEL),
                         new MecanumVelocityConstraint(40, RRDriveConstants.TRACK_WIDTH)
                         )),
@@ -64,7 +64,11 @@ public class DuckSideRed extends SequentialCommandGroup {
                 .build();
 
         Trajectory traj6 = driveSubsystem.trajectoryBuilder(traj5.end())
-                .forward(15.5)
+                .forward(19.0)
+                .build();
+
+        Trajectory traj7 = driveSubsystem.trajectoryBuilder(traj5.end())
+                .forward(25.0)
                 .build();
 
         Trajectory traj2Half = driveSubsystem.trajectoryBuilder(traj1.end())
@@ -73,7 +77,7 @@ public class DuckSideRed extends SequentialCommandGroup {
 
         addCommands(
                 new TrajectoryFollowerCommand(driveSubsystem, traj0),
-                new TurnCommand(driveSubsystem, Math.toRadians(19.0)).
+                new TurnCommand(driveSubsystem, Math.toRadians(-19.0)).
                         alongWith(new LiftCommandNoPID(liftSubsystem, time, location)
                         ),
                 new TrajectoryFollowerCommand(driveSubsystem, traj1),
@@ -82,21 +86,22 @@ public class DuckSideRed extends SequentialCommandGroup {
                 new WaitCommand(2000),
                 new TrajectoryFollowerCommand(driveSubsystem, traj2Half),
                 new InstantCommand(() -> dropOffSubsystem.returnHome()),
+                new WaitCommand(500),
                 new LiftCommandNoPID(liftSubsystem, time, 4),
                 new WaitCommand(1000),
                 new TrajectoryFollowerCommand(driveSubsystem, traj2)
                         .alongWith(new LiftCommandNoPID(liftSubsystem, time, 2)),
-                new TurnCommand(driveSubsystem, Math.toRadians(-80.0)),
-                new TrajectoryFollowerCommand(driveSubsystem, traj3),
-                new TurnCommand(driveSubsystem, Math.toRadians(65.0)),
-                new TrajectoryFollowerCommand(driveSubsystem, traj4)
-                        .alongWith(new InstantCommand(() -> spinnerSubsystem.spin(-0.35))
+                new TurnCommand(driveSubsystem, Math.toRadians(85.0)),
+                new TrajectoryFollowerCommand(driveSubsystem, traj3)
+                        .alongWith(new InstantCommand(() -> spinnerSubsystem.spin(0.35))
                         ),
-                new WaitCommand(2000),
+                new WaitCommand(2500),
                 new InstantCommand(() -> spinnerSubsystem.stop()),
                 new TrajectoryFollowerCommand(driveSubsystem, traj5),
-                new TurnCommand(driveSubsystem, Math.toRadians(-75.0)),
-                new TrajectoryFollowerCommand(driveSubsystem, traj6)
+                new TurnCommand(driveSubsystem, Math.toRadians(75.0)),
+                new TrajectoryFollowerCommand(driveSubsystem, traj6),
+                new TurnCommand(driveSubsystem, Math.toRadians(-65.0)),
+                new TrajectoryFollowerCommand(driveSubsystem, traj7)
         );
 
     }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.soMuchAuto;
 
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -12,7 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.commands.paths.DuckSideRed;
-import org.firstinspires.ftc.teamcode.commands.paths.FreightSideRed;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleTankDrive;
 import org.firstinspires.ftc.teamcode.rr.subsystems.TankDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DropOffSubsystem;
@@ -57,7 +57,6 @@ public class RedDuckAuto extends CommandOpMode {
         time = new ElapsedTime();
 
         capstoneDetector = new CapstoneDetector(hardwareMap, "coolio");
-        capstoneDetector.init();
 
         tankDrive = new SampleTankDrive(hardwareMap);
         tankDriveSubsystem = new TankDriveSubsystem(tankDrive);
@@ -68,24 +67,28 @@ public class RedDuckAuto extends CommandOpMode {
 
         spinnerSubsystem = new SpinnerSubsystem(duckSpinner);
 
-        schedule(new WaitUntilCommand(this::isStarted).andThen(new RunCommand(() -> {
-            telemetry.addData("location", location);
-            telemetry.update();
-        })));
-
-        schedule(new WaitUntilCommand(this::isStarted).andThen(new WaitCommand(500))
-                .andThen(new RunCommand(() -> location = capstoneDetector.getPlacement()).
-                        raceWith(new WaitCommand(500))).andThen(
+        schedule(new WaitUntilCommand(this::isStarted)
+                .andThen(new InstantCommand(() -> capstoneDetector.init()
+                )).andThen(new WaitCommand(2000))
+                .andThen(new RunCommand(() -> {
+                    location = capstoneDetector.getPlacement();
+                    telemetry.addData("Placement ", location);
+                    telemetry.update();
+                })
+                        .raceWith(new WaitCommand(1000))).andThen(
                         new SelectCommand(new HashMap<Object, Command>() {{
                             put(CapstoneDetector.Placement.RIGHT,
-                                    (new DuckSideRed(tankDriveSubsystem, liftSubsystemNoPID,
-                                            time, dropOffSubsystem, 1, spinnerSubsystem)));
+                                    (new InstantCommand(() -> capstoneDetector.getCamera().stopStreaming())
+                                            .andThen(new DuckSideRed(tankDriveSubsystem, liftSubsystemNoPID,
+                                                    time, dropOffSubsystem, 1, spinnerSubsystem))));
                             put(CapstoneDetector.Placement.CENTER,
-                                    (new DuckSideRed(tankDriveSubsystem, liftSubsystemNoPID,
-                                            time, dropOffSubsystem, 0, spinnerSubsystem)));
+                                    (new InstantCommand(() -> capstoneDetector.getCamera().stopStreaming())
+                                            .andThen(new DuckSideRed(tankDriveSubsystem, liftSubsystemNoPID,
+                                                    time, dropOffSubsystem, 0, spinnerSubsystem))));
                             put(CapstoneDetector.Placement.LEFT,
-                                    (new DuckSideRed(tankDriveSubsystem, liftSubsystemNoPID,
-                                            time, dropOffSubsystem, 3, spinnerSubsystem)));
+                                    (new InstantCommand(() -> capstoneDetector.getCamera().stopStreaming())
+                                            .andThen(new DuckSideRed(tankDriveSubsystem, liftSubsystemNoPID,
+                                                    time, dropOffSubsystem, 3, spinnerSubsystem))));
                         }}, () -> location
                         )));
     }
